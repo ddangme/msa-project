@@ -1,0 +1,27 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: gateway-server
+  cloud:
+    gateway:
+      server:
+        webmvc:
+          routes:
+            - id: order-server
+              uri: http://order-server:19010
+              predicates:
+                - Path=/api/v1/orders/**
+
+            - id: product-server
+              uri: http://product-server:19050
+              predicates:
+                - Path=/api/v1/products/**
+
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka/

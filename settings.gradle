@@ -1,3 +1,4 @@
 rootProject.name = 'msa-project'
 
 include 'eureka'
+include 'gateway'
