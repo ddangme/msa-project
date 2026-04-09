@@ -5,9 +5,17 @@ services:
       - "8761:8761"
     environment:
       - EUREKA_HOSTNAME=eureka-server
+
   gateway-server:
     build: ./gateway
     ports:
       - "8090:8090"
+    depends_on:
+      - eureka-server
+
+  product-server:
+    build: ./product
+    ports:
+      - "19050:19050"
     depends_on:
       - eureka-server
