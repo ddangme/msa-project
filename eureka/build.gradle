@@ -1,0 +1,10 @@
+dependencies {
+	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
+}
+
+repositories {
+	mavenCentral()
+}
+
+bootJar { enabled = true }
+jar { enabled = false }
