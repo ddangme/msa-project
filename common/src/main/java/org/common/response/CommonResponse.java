@@ -21,4 +21,8 @@ public class CommonResponse<T> {
     public static <T> CommonResponse<T> success(T data, String message) {
         return new CommonResponse<>(true, data, message);
     }
+
+    public static <T> CommonResponse<T> fail(String message) {
+        return new CommonResponse<>(false, null, message);
+    }
 }
