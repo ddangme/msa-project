@@ -10,7 +10,7 @@ public record ProductInfo(
         String name,
         int stock,
         int price,
-        ProductStatus status
+        boolean isOrderable
 ) {
 
     public static ProductInfo from(Product product) {
@@ -19,7 +19,7 @@ public record ProductInfo(
                 product.getName(),
                 product.getStock(),
                 product.getPrice(),
-                product.getProductStatus()
+                product.isOrderable()
         );
     }
 }

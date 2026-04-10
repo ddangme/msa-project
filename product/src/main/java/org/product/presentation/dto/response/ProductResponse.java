@@ -9,7 +9,7 @@ public record ProductResponse(
         String name,
         int stock,
         int price,
-        String status
+        boolean isOrderable
 ) {
 
     public static ProductResponse from(ProductInfo info) {
@@ -18,8 +18,7 @@ public record ProductResponse(
                 info.name(),
                 info.stock(),
                 info.price(),
-                info.status().name()
+                info.isOrderable()
         );
     }
-
 }

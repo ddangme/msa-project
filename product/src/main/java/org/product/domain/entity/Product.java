@@ -57,6 +57,10 @@ public class Product {
                 .build();
     }
 
+    public boolean isOrderable() {
+        return this.productStatus == ProductStatus.ON_SALE && this.stock > 0;
+    }
+
     public void decreaseStock(int quantity) {
         if (this.stock - quantity < MIN_STOCK) {
             throw new OutOfStockException(ProductErrorCode.OUT_OF_STOCK);
