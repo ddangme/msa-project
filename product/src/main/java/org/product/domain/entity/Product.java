@@ -33,21 +33,21 @@ public class Product {
     private int stock;
 
     @Column(nullable = false)
-    private long price;
+    private int price;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ProductStatus productStatus;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private Product(String name, int stock, long price) {
+    private Product(String name, int stock, int price) {
         this.name = name;
         this.stock = stock;
         this.price = price;
         this.productStatus = ProductStatus.PREPARING;
     }
 
-    public static Product create(String name, int stock, long price) {
+    public static Product create(String name, int stock, int price) {
         validateProduct(name, stock, price);
 
         return Product.builder()
