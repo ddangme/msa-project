@@ -48,13 +48,13 @@ public class Order {
         this.delivery = delivery;
     }
 
-    public static Order create(UUID sellerId, UUID shopperId, Product product, Delivery delivery, Long totalPrice) {
+    public static Order create(UUID sellerId, UUID shopperId, Product product, Delivery delivery, long pricePerItem) {
         return Order.builder()
                 .sellerId(sellerId)
                 .shopperId(shopperId)
                 .product(product)
                 .delivery(delivery)
-                .totalPrice(totalPrice)
+                .totalPrice(pricePerItem * product.getQuantity())
                 .build();
     }
 

@@ -17,8 +17,8 @@ public record CreateOrderCommand(
         String message
 ) {
 
-    public Order toEntity(Long totalPrice) {
-        return Order.create(sellerId, shopperId, toProduct(), toDelivery(), totalPrice);
+    public Order toEntity(int pricePerItem) {
+        return Order.create(sellerId, shopperId, toProduct(), toDelivery(), pricePerItem);
     }
 
     private Product toProduct() {
