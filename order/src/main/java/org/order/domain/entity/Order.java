@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.order.domain.vo.Delivery;
+import org.order.domain.vo.Product;
 
 import java.util.UUID;
 
@@ -29,26 +30,31 @@ public class Order {
     private OrderStatus orderStatus;
 
     @Column(nullable = false)
-    private UUID productId;
+    private Long totalPrice;
+
+    @Embedded
+    private Product product;
 
     @Embedded
     private Delivery delivery;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private Order(UUID sellerId, UUID shopperId, UUID productId, Delivery delivery) {
+    private Order(UUID sellerId, UUID shopperId, Product product, Delivery delivery, Long totalPrice) {
         this.sellerId = sellerId;
         this.shopperId = shopperId;
         this.orderStatus = OrderStatus.ORDER_ACCEPT;
-        this.productId = productId;
+        this.totalPrice = totalPrice;
+        this.product = product;
         this.delivery = delivery;
     }
 
-    public static Order create(UUID sellerId, UUID shopperId, UUID productId, Delivery delivery) {
+    public static Order create(UUID sellerId, UUID shopperId, Product product, Delivery delivery, Long totalPrice) {
         return Order.builder()
                 .sellerId(sellerId)
                 .shopperId(shopperId)
-                .productId(productId)
+                .product(product)
                 .delivery(delivery)
+                .totalPrice(totalPrice)
                 .build();
     }
 
