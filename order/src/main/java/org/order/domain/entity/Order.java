@@ -42,7 +42,7 @@ public class Order {
     private Order(UUID sellerId, UUID shopperId, Product product, Delivery delivery, Long totalPrice) {
         this.sellerId = sellerId;
         this.shopperId = shopperId;
-        this.orderStatus = OrderStatus.ORDER_ACCEPT;
+        this.orderStatus = OrderStatus.PENDING;
         this.totalPrice = totalPrice;
         this.product = product;
         this.delivery = delivery;
