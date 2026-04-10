@@ -1,4 +1,4 @@
-package org.order.infrastructure;
+package org.order.infrastructure.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.order.domain.entity.Order;

@@ -1,4 +1,4 @@
-package org.order.infrastructure;
+package org.order.infrastructure.repository;
 
 import org.order.domain.entity.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
