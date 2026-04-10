@@ -18,14 +18,15 @@ public class Delivery {
     private String detailAddress;
 
     @Column(nullable = false)
-    private String username;
+    private String shopperName;
 
     private String message;
 
-    public Delivery(String address, String detailAddress, String username, String message) {
+    public Delivery(String address, String detailAddress, String shopperName, String message) {
         this.address = address;
         this.detailAddress = detailAddress;
-        this.username = username;
+        this.shopperName = shopperName;
+        this.message = message;
     }
 
 }
