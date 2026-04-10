@@ -5,9 +5,10 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.product.domain.constant.ProductPolicy;
 import org.product.domain.exception.InvalidProductException;
 import org.product.domain.exception.OutOfStockException;
-import org.product.domain.exception.ProductErrorCode;
+import org.product.global.exception.ProductErrorCode;
 
 import java.util.UUID;
 
@@ -17,10 +18,10 @@ import java.util.UUID;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product {
 
-    private static final Integer MIN_STOCK = 0;
-    private static final Integer MAX_STOCK = 1_000_000;
-    private static final Integer MIN_PRICE = 0;
-    private static final Integer MAX_PRICE = 2_000_000_000;
+    private static final Integer MIN_STOCK = ProductPolicy.MIN_STOCK;
+    private static final Integer MAX_STOCK = ProductPolicy.MAX_STOCK;
+    private static final Integer MIN_PRICE = ProductPolicy.MIN_PRICE;
+    private static final Integer MAX_PRICE = ProductPolicy.MAX_PRICE;
 
     @Id @GeneratedValue(strategy = GenerationType.UUID)
     private UUID productId;

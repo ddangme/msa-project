@@ -19,9 +19,6 @@ public class GlobalExceptionHandler {
         BaseErrorCode errorCode = e.getBaseErrorCode();
 
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-        if (errorCode instanceof ErrorCode) {
-            status = ((ErrorCode) errorCode).getStatus();
-        }
 
         return ResponseEntity
                 .status(status)
