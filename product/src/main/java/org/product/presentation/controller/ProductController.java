@@ -29,10 +29,17 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<CommonResponse<Page<ProductResponse>>> findProduct(Pageable pageable) {
+    public ResponseEntity<CommonResponse<Page<ProductResponse>>> findProducts(Pageable pageable) {
         Page<ProductInfo> responses = productService.find(pageable);
 
         return ResponseEntity.ok(CommonResponse.success(responses.map(ProductResponse::from)));
+    }
+
+    @GetMapping("/{productId}")
+    public ResponseEntity<CommonResponse<ProductResponse>> findProduct(@PathVariable UUID productId) {
+        ProductInfo response = productService.find(productId);
+
+        return ResponseEntity.ok(CommonResponse.success(ProductResponse.from(response)));
     }
 
 }

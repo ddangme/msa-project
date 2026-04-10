@@ -13,6 +13,7 @@ public enum ProductErrorCode implements BaseErrorCode {
     INVALID_PRODUCT_STOCK("PRODUCT-002", "유효하지 않은 재고 수량입니다."),
     INVALID_PRODUCT_PRICE("PRODUCT-003", "유효하지 않은 가격입니다."),
     OUT_OF_STOCK("PRODUCT-004", "재고가 부족합니다."),
+    PRODUCT_NOT_FOUND("PRODUCT-005", "존재하지 않는 상품입니다."),
 
     ;
 

@@ -29,4 +29,8 @@ public class ProductService {
         return productRepository.findAll(pageable)
                 .map(ProductInfo::from);
     }
+
+    public ProductInfo find(UUID productId) {
+        return ProductInfo.from(productRepository.findById(productId));
+    }
 }
