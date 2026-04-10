@@ -2,8 +2,11 @@ package org.product.application.service;
 
 import lombok.RequiredArgsConstructor;
 import org.product.application.dto.CreateProductCommand;
+import org.product.application.dto.ProductInfo;
 import org.product.domain.entity.Product;
 import org.product.domain.repository.ProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,4 +25,8 @@ public class ProductService {
         return productRepository.save(product).getProductId();
     }
 
+    public Page<ProductInfo> find(Pageable pageable) {
+        return productRepository.findAll(pageable)
+                .map(ProductInfo::from);
+    }
 }
