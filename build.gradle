@@ -25,6 +25,14 @@ subprojects {
 
 	sourceCompatibility = '21'
 
+	tasks.named('jar') {
+		enabled = false
+	}
+
+	tasks.named('bootJar') {
+		enabled = true
+	}
+
 	configurations {
 		compileOnly {
 			extendsFrom annotationProcessor
