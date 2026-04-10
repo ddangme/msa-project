@@ -3,7 +3,6 @@ package org.product.global.exception;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.common.exception.BaseErrorCode;
-import org.product.domain.constant.ProductPolicy;
 
 @Getter
 @RequiredArgsConstructor
