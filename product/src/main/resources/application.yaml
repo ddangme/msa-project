@@ -6,14 +6,14 @@ spring:
     name: product-server
 
   datasource:
-    url: jdbc:postgresql://localhost:5434/msa-project
+    url: jdbc:postgresql://postgres-db:5432/msa-project
     username: msa-project
     password: msa-project
     driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
     show-sql: false
     properties:
       hibernate:

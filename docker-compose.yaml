@@ -1,4 +1,16 @@
 services:
+  postgres-db:
+    image: postgres:17
+    container_name: postgres-db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=msa-project
+      - POSTGRES_USER=msa-project
+      - POSTGRES_PASSWORD=msa-project
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
   eureka-server:
     build: ./eureka
     ports:
@@ -26,3 +38,6 @@ services:
       - "19010:19010"
     depends_on:
       - eureka-server
+
+volumes:
+  postgres_data:
