@@ -8,7 +8,8 @@ public record ProductResponse(
         UUID productId,
         String name,
         int stock,
-        int price
+        int price,
+        String status
 ) {
 
     public static ProductResponse from(ProductInfo info) {
@@ -16,7 +17,8 @@ public record ProductResponse(
                 info.productId(),
                 info.name(),
                 info.stock(),
-                info.price()
+                info.price(),
+                info.status().name()
         );
     }
 
