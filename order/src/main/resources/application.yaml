@@ -6,7 +6,7 @@ spring:
     name: order-server
 
   datasource:
-    url: jdbc:postgresql://localhost:5434/msa-project
+    url: jdbc:postgresql://postgres-db:5432/msa-project
     username: msa-project
     password: msa-project
     driver-class-name: org.postgresql.Driver
