@@ -35,7 +35,7 @@ public class OrderEventLog {
     @Column(nullable = false)
     private OrderEventStatus status;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "integer default 0")
     private int retryCount = 0;
 
     @CreatedDate

@@ -35,7 +35,7 @@ public class ProductEventLog {
     @Column(nullable = false)
     private ProductEventStatus status;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "integer default 0")
     private int retryCount = 0;
 
     @CreatedDate
