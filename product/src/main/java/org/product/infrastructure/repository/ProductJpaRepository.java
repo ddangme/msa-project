@@ -1,4 +1,4 @@
-package org.product.infrastructure;
+package org.product.infrastructure.repository;
 
 import org.product.domain.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;

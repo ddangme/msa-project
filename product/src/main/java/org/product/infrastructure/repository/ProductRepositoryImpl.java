@@ -1,4 +1,4 @@
-package org.product.infrastructure;
+package org.product.infrastructure.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.product.domain.entity.Product;
