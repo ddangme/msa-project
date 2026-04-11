@@ -35,6 +35,9 @@ public class ProductEventLog {
     @Column(nullable = false)
     private ProductEventStatus status;
 
+    @Column(nullable = false)
+    private int retryCount = 0;
+
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
@@ -45,6 +48,7 @@ public class ProductEventLog {
         this.eventType = eventType;
         this.payload = payload;
         this.status = ProductEventStatus.INIT;
+        this.retryCount = 0; // 초기값 설정
     }
 
     public static ProductEventLog create(UUID orderId, ProductEventType eventType, String payloadJson) {
@@ -57,5 +61,12 @@ public class ProductEventLog {
 
     public void completePublish() {
         this.status = ProductEventStatus.PUBLISHED;
+    }
+
+    public void increaseRetryCount(int maxRetry) {
+        this.retryCount++;
+        if (this.retryCount >= maxRetry) {
+            this.status = ProductEventStatus.FAILED;
+        }
     }
 }
