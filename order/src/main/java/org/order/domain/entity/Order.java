@@ -58,4 +58,12 @@ public class Order {
                 .build();
     }
 
+    public void completeOrder() {
+        this.orderStatus = OrderStatus.ORDER_COMPLETED;
+    }
+
+    public void cancelOrder() {
+        this.orderStatus = OrderStatus.ORDER_CANCEL;
+    }
+
 }
