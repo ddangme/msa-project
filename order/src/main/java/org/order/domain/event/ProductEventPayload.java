@@ -1,4 +1,4 @@
-package org.product.domain.event;
+package org.order.domain.event;
 
 import java.util.UUID;
 

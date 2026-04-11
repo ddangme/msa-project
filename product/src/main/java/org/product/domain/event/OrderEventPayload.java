@@ -5,5 +5,6 @@ import java.util.UUID;
 public record OrderEventPayload(
         UUID orderId,
         UUID productId,
-        int quantity
+        int quantity,
+        OrderEventType eventType
 ) {}
