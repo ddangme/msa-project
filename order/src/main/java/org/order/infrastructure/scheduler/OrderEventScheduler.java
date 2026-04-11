@@ -33,7 +33,7 @@ public class OrderEventScheduler {
 
         for (OrderEventLog event : allEvent) {
             try {
-                kafkaTemplate.send("order-created", event.getPayload());
+                kafkaTemplate.send("order-created", event.getPayload()).get();
 
                 event.completePublish();
                 log.info("이벤트 발행 성공 - ID: {}, Type: {}", event.getEventId(), event.getEventType());
