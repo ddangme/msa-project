@@ -7,7 +7,7 @@ import org.order.application.dto.CreateOrderCommand;
 import org.order.domain.entity.Order;
 import org.order.domain.entity.OrderEventLog;
 import org.order.domain.entity.OrderEventPayload;
-import org.order.domain.exception.OrderEventSerializationException;
+import org.order.domain.exception.OrderEventException;
 import org.order.domain.repository.OrderEventLogRepository;
 import org.order.domain.repository.OrderRepository;
 import org.order.domain.repository.ProductClient;
@@ -50,7 +50,7 @@ public class OrderService {
         try {
             return objectMapper.writeValueAsString(payload);
         } catch (JsonProcessingException e) {
-            throw new OrderEventSerializationException(OrderErrorCode.EVENT_SERIALIZATION_FAIL, e);
+            throw new OrderEventException(OrderErrorCode.EVENT_SERIALIZATION_FAIL, e);
         }
     }
 }

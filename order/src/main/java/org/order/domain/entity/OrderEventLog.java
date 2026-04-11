@@ -33,7 +33,10 @@ public class OrderEventLog {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private EventStatus status;
+    private OrderEventStatus status;
+
+    @Column(nullable = false)
+    private int retryCount = 0;
 
     @CreatedDate
     @Column(updatable = false)
@@ -44,7 +47,8 @@ public class OrderEventLog {
         this.orderId = orderId;
         this.eventType = eventType;
         this.payload = payload;
-        this.status = EventStatus.INIT;
+        this.status = OrderEventStatus.INIT;
+        this.retryCount = 0;
     }
 
     public static OrderEventLog create(UUID orderId, String payloadJson) {
@@ -56,7 +60,13 @@ public class OrderEventLog {
     }
 
     public void completePublish() {
-        this.status = EventStatus.PUBLISHED;
+        this.status = OrderEventStatus.PUBLISHED;
     }
 
+    public void increaseRetryCount(int maxRetry) {
+        this.retryCount++;
+        if (this.retryCount >= maxRetry) {
+            this.status = OrderEventStatus.FAILED;
+        }
+    }
 }
