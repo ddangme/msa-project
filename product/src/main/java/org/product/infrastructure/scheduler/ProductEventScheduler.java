@@ -34,7 +34,7 @@ public class ProductEventScheduler {
         for (ProductEventLog event : allEvent) {
             try {
                 kafkaTemplate.send("product-stock-result", event.getPayload());
-                event.completePublish();
+                event.markAsPublish();
                 log.info("상품 이벤트 발행 성공 - ID: {}, Type: {}", event.getEventId(), event.getEventType());
             } catch (Exception e) {
                 log.error("상품 이벤트 발행 실패 - ID: {}, 사유: {}", event.getEventId(), e.getMessage());

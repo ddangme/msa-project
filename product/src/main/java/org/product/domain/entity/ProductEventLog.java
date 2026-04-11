@@ -48,7 +48,7 @@ public class ProductEventLog {
         this.eventType = eventType;
         this.payload = payload;
         this.status = ProductEventStatus.INIT;
-        this.retryCount = 0; // 초기값 설정
+        this.retryCount = 0;
     }
 
     public static ProductEventLog create(UUID orderId, ProductEventType eventType, String payloadJson) {
@@ -59,7 +59,12 @@ public class ProductEventLog {
                 .build();
     }
 
-    public void completePublish() {
+    public void markAsPublishing() {
+        this.status = ProductEventStatus.PUBLISHING;
+    }
+
+
+    public void markAsPublish() {
         this.status = ProductEventStatus.PUBLISHED;
     }
 

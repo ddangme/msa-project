@@ -47,7 +47,7 @@ public class OrderEventScheduler {
     @Transactional
     public void handleSuccess(UUID eventId) {
         OrderEventLog event = orderEventLogRepository.findById(eventId);
-        event.completePublish();
+        event.markAsPublish();
         log.info("이벤트 발행 성공 - ID: {}", eventId);
     }
 

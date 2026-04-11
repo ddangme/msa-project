@@ -59,7 +59,11 @@ public class OrderEventLog {
                 .build();
     }
 
-    public void completePublish() {
+    public void markAsPublishing() {
+        this.status = OrderEventStatus.PUBLISHING;
+    }
+
+    public void markAsPublish() {
         this.status = OrderEventStatus.PUBLISHED;
     }
 
