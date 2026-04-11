@@ -10,6 +10,19 @@ services:
       - POSTGRES_PASSWORD=msa-project
     volumes:
       - postgres_data:/var/lib/postgresql/data
+  kafka:
+    image: apache/kafka:3.8.0
+    container_name: kafka
+    environment:
+      - KAFKA_NODE_ID=0
+      - KAFKA_PROCESS_ROLES=controller,broker
+      - KAFKA_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
+      - KAFKA_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
 
   eureka-server:
     build: ./eureka
@@ -22,16 +35,26 @@ services:
     build: ./gateway
     ports:
       - "8090:8090"
+    depends_on:
+      - eureka-server
 
   product-server:
     build: ./product
     ports:
       - "19050:19050"
+    depends_on:
+      - postgres-db
+      - kafka
+      - eureka-server
 
   order-server:
     build: ./order
     ports:
       - "19010:19010"
+    depends_on:
+      - postgres-db
+      - kafka
+      - eureka-server
 
 volumes:
   postgres_data:
