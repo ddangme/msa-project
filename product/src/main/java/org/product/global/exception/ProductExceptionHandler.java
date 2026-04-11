@@ -1,10 +1,10 @@
-package org.order.global.exception;
+package org.product.global.exception;
 
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.common.response.CommonResponse;
-import org.order.domain.exception.OrderEventException;
-import org.order.domain.exception.OrderException;
+import org.product.domain.exception.ProductEventException;
+import org.product.domain.exception.ProductException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -13,18 +13,18 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
 @RestControllerAdvice
-public class OrderExceptionHandler {
+public class ProductExceptionHandler {
 
-    @ExceptionHandler(OrderException.class)
-    public ResponseEntity<CommonResponse<Void>> handleOrderException(OrderException e) {
+    @ExceptionHandler(ProductException.class)
+    public ResponseEntity<CommonResponse<Void>> handleProductException(ProductException e) {
         log.warn("Business Exception: {}", e.getMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(CommonResponse.fail(e.getMessage()));
     }
 
-    @ExceptionHandler(OrderEventException.class)
-    public ResponseEntity<CommonResponse<Void>> handleOrderEventException(OrderEventException e) {
+    @ExceptionHandler(ProductEventException.class)
+    public ResponseEntity<CommonResponse<Void>> handleProductEventException(ProductEventException e) {
         log.error("Event Processing Exception: ", e);
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -43,9 +43,10 @@ public class OrderExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<CommonResponse<Void>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         log.warn("Validation Exception: {}", e.getMessage());
+        String errorMessage = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(CommonResponse.fail(e.getBindingResult().getAllErrors().get(0).getDefaultMessage()));
+                .body(CommonResponse.fail(errorMessage));
     }
 
     @ExceptionHandler(Exception.class)
@@ -63,5 +64,4 @@ public class OrderExceptionHandler {
         HttpStatus resolvedStatus = HttpStatus.resolve(status);
         return resolvedStatus != null ? resolvedStatus : HttpStatus.BAD_GATEWAY;
     }
-
 }

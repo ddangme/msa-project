@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.product.domain.event.ProductEventType;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -35,6 +36,9 @@ public class ProductEventLog {
     @Column(nullable = false)
     private ProductEventStatus status;
 
+    @Column(nullable = false, columnDefinition = "integer default 0")
+    private int retryCount = 0;
+
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
@@ -45,6 +49,7 @@ public class ProductEventLog {
         this.eventType = eventType;
         this.payload = payload;
         this.status = ProductEventStatus.INIT;
+        this.retryCount = 0;
     }
 
     public static ProductEventLog create(UUID orderId, ProductEventType eventType, String payloadJson) {
@@ -55,7 +60,21 @@ public class ProductEventLog {
                 .build();
     }
 
-    public void completePublish() {
+    public void markAsPublishing() {
+        this.status = ProductEventStatus.PUBLISHING;
+    }
+
+
+    public void markAsPublish() {
         this.status = ProductEventStatus.PUBLISHED;
+    }
+
+    public void increaseRetryCount(int maxRetry) {
+        this.retryCount++;
+        if (this.retryCount >= maxRetry) {
+            this.status = ProductEventStatus.FAILED;
+        } else {
+            this.status = ProductEventStatus.INIT;
+        }
     }
 }

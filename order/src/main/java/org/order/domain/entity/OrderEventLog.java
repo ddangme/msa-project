@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.order.domain.event.OrderEventType;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -26,37 +27,53 @@ public class OrderEventLog {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private EventType eventType;
+    private OrderEventType orderEventType;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String payload;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private EventStatus status;
+    private OrderEventStatus status;
+
+    @Column(nullable = false, columnDefinition = "integer default 0")
+    private int retryCount = 0;
 
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
     @Builder
-    private OrderEventLog(UUID orderId, EventType eventType, String payload) {
+    private OrderEventLog(UUID orderId, OrderEventType orderEventType, String payload) {
         this.orderId = orderId;
-        this.eventType = eventType;
+        this.orderEventType = orderEventType;
         this.payload = payload;
-        this.status = EventStatus.INIT;
+        this.status = OrderEventStatus.INIT;
+        this.retryCount = 0;
     }
 
     public static OrderEventLog create(UUID orderId, String payloadJson) {
         return OrderEventLog.builder()
                 .orderId(orderId)
-                .eventType(EventType.ORDER_CREATED)
+                .orderEventType(OrderEventType.ORDER_CREATED)
                 .payload(payloadJson)
                 .build();
     }
 
-    public void completePublish() {
-        this.status = EventStatus.PUBLISHED;
+    public void markAsPublishing() {
+        this.status = OrderEventStatus.PUBLISHING;
     }
 
+    public void markAsPublish() {
+        this.status = OrderEventStatus.PUBLISHED;
+    }
+
+    public void increaseRetryCount(int maxRetry) {
+        this.retryCount++;
+        if (this.retryCount >= maxRetry) {
+            this.status = OrderEventStatus.FAILED;
+        } else {
+            this.status = OrderEventStatus.INIT;
+        }
+    }
 }

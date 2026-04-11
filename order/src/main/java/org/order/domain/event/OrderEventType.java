@@ -1,9 +1,9 @@
-package org.order.domain.entity;
+package org.order.domain.event;
 
 import lombok.Getter;
 
 @Getter
-public enum EventType {
+public enum OrderEventType {
     ORDER_CREATED,
     ORDER_CANCELLED,
     ORDER_FAILED

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.product.application.dto.OrderEventPayload;
+import org.product.domain.event.OrderEventPayload;
 import org.product.application.service.ProductService;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;

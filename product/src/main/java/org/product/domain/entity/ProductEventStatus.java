@@ -2,5 +2,7 @@ package org.product.domain.entity;
 
 public enum ProductEventStatus {
     INIT,
-    PUBLISHED
+    PUBLISHING,
+    PUBLISHED,
+    FAILED
 }

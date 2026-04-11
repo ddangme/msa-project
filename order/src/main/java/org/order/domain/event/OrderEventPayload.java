@@ -1,9 +1,10 @@
-package org.order.domain.entity;
+package org.order.domain.event;
 
 import java.util.UUID;
 
 public record OrderEventPayload(
         UUID orderId,
         UUID productId,
-        int quantity
+        int quantity,
+        OrderEventType eventType
 ) {}
