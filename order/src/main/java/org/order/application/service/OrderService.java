@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.order.application.dto.CreateOrderCommand;
 import org.order.domain.entity.Order;
 import org.order.domain.entity.OrderEventLog;
-import org.order.domain.entity.OrderEventPayload;
+import org.order.domain.event.OrderEventPayload;
 import org.order.domain.exception.OrderEventException;
 import org.order.domain.repository.OrderEventLogRepository;
 import org.order.domain.repository.OrderRepository;
