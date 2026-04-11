@@ -1,5 +1,6 @@
 package org.order.global.exception;
 
+import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.common.response.CommonResponse;
 import org.order.domain.exception.OrderException;
@@ -38,5 +39,13 @@ public class OrderExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(CommonResponse.fail(e.getMessage()));
+    }
+
+    @ExceptionHandler(FeignException.class)
+    public ResponseEntity<CommonResponse<Void>> handleFeignException(FeignException e) {
+
+        return ResponseEntity
+                .status(e.status())
+                .body(CommonResponse.fail("상품 서버 처리 중 오류가 발생했습니다."));
     }
 }
