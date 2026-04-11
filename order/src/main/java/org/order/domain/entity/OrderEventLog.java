@@ -67,6 +67,8 @@ public class OrderEventLog {
         this.retryCount++;
         if (this.retryCount >= maxRetry) {
             this.status = OrderEventStatus.FAILED;
+        } else {
+            this.status = OrderEventStatus.INIT;
         }
     }
 }

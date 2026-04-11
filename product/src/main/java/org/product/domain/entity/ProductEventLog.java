@@ -67,6 +67,8 @@ public class ProductEventLog {
         this.retryCount++;
         if (this.retryCount >= maxRetry) {
             this.status = ProductEventStatus.FAILED;
+        } else {
+            this.status = ProductEventStatus.INIT;
         }
     }
 }
