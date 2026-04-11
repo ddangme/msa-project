@@ -10,7 +10,7 @@ import org.product.domain.event.ProductEventPayload;
 import org.product.application.dto.ProductInfo;
 import org.product.domain.entity.Product;
 import org.product.domain.entity.ProductEventLog;
-import org.product.domain.entity.ProductEventType;
+import org.product.domain.event.ProductEventType;
 import org.product.domain.repository.ProductEventLogRepository;
 import org.product.domain.repository.ProductRepository;
 import org.springframework.data.domain.Page;
@@ -61,7 +61,7 @@ public class ProductService {
     }
 
     private void saveProductEvent(UUID orderId, UUID productId, ProductEventType eventType) {
-        ProductEventPayload payload = new ProductEventPayload(orderId, productId, eventType.name());
+        ProductEventPayload payload = new ProductEventPayload(orderId, productId, eventType);
         try {
             String serializedPayload = objectMapper.writeValueAsString(payload);
             productEventLogRepository.save(ProductEventLog.create(orderId, eventType, serializedPayload));

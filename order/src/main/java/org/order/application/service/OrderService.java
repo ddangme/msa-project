@@ -3,10 +3,14 @@ package org.order.application.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.order.application.dto.CreateOrderCommand;
 import org.order.domain.entity.Order;
 import org.order.domain.entity.OrderEventLog;
 import org.order.domain.event.OrderEventPayload;
+import org.order.domain.event.OrderEventType;
+import org.order.domain.event.ProductEventPayload;
+import org.order.domain.event.ProductEventType;
 import org.order.domain.exception.OrderEventException;
 import org.order.domain.repository.OrderEventLogRepository;
 import org.order.domain.repository.OrderRepository;
@@ -18,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -40,7 +45,12 @@ public class OrderService {
     }
 
     private void saveOrderEvent(UUID orderId, CreateOrderCommand command) {
-        OrderEventPayload payload = new OrderEventPayload(orderId, command.productId(), command.quantity());
+        OrderEventPayload payload = new OrderEventPayload(
+                orderId,
+                command.productId(),
+                command.quantity(),
+                OrderEventType.ORDER_CREATED
+        );
         String serializedPayload = serializePayload(payload);
 
         orderEventLogRepository.save(OrderEventLog.create(orderId, serializedPayload));
@@ -51,6 +61,20 @@ public class OrderService {
             return objectMapper.writeValueAsString(payload);
         } catch (JsonProcessingException e) {
             throw new OrderEventException(OrderErrorCode.EVENT_SERIALIZATION_FAIL, e);
+        }
+    }
+
+    @Transactional
+    public void processProductResult(ProductEventPayload payload) {
+        Order order = orderRepository.findById(payload.orderId());
+
+        if (payload.status() == ProductEventType.STOCK_DEDUCTED_SUCCESS) {
+            order.completeOrder();
+            log.info("주문 재고 확인 완료 (주문 완료) - OrderID: {}", order.getOrderId());
+
+        } else if (payload.status() == ProductEventType.STOCK_DEDUCTED_FAILED) {
+            order.cancelOrder();
+            log.warn("재고 부족으로 인한 주문 보상 트랜잭션 (주문 취소) 완료 - OrderID: {}", order.getOrderId());
         }
     }
 }
