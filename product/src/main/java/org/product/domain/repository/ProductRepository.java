@@ -4,6 +4,7 @@ import org.product.domain.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public interface ProductRepository {
@@ -12,5 +13,5 @@ public interface ProductRepository {
 
     Page<Product> findAll(Pageable pageable);
 
-    Product findById(UUID productId);
+    Optional<Product> findById(UUID productId);
 }

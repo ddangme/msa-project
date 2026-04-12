@@ -11,8 +11,10 @@ import org.product.application.dto.ProductInfo;
 import org.product.domain.entity.Product;
 import org.product.domain.entity.ProductEventLog;
 import org.product.domain.event.ProductEventType;
+import org.product.domain.exception.ProductNotFoundException;
 import org.product.domain.repository.ProductEventLogRepository;
 import org.product.domain.repository.ProductRepository;
+import org.product.global.exception.ProductErrorCode;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -42,14 +44,14 @@ public class ProductService {
     }
 
     public ProductInfo find(UUID productId) {
-        return ProductInfo.from(productRepository.findById(productId));
+        return ProductInfo.from(getProduct(productId));
     }
 
     @Transactional
     public void processOrderEvent(OrderEventPayload payload) {
         ProductEventType eventType;
         try {
-            Product product = productRepository.findById(payload.productId());
+            Product product = getProduct(payload.productId());
             product.decreaseStock(payload.quantity());
             eventType = ProductEventType.STOCK_DEDUCTED_SUCCESS;
         } catch (Exception e) {
@@ -68,5 +70,10 @@ public class ProductService {
         } catch (JsonProcessingException e) {
             log.error("Failed to serialize product event payload: {}", e.getMessage(), e);
         }
+    }
+
+    private Product getProduct(UUID productId) {
+        return productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException(ProductErrorCode.PRODUCT_NOT_FOUND));
     }
 }
