@@ -22,12 +22,12 @@ public record OrderDetailResponse(
                 info.shopperId(),
                 info.orderStatus(),
                 info.totalPrice(),
-                info.product().getProductId(),
-                info.product().getQuantity(),
-                info.delivery().getAddress(),
-                info.delivery().getDetailAddress(),
-                info.delivery().getShopperName(),
-                info.delivery().getMessage()
+                info.productId(),
+                info.quantity(),
+                info.address(),
+                info.detailAddress(),
+                info.shopperName(),
+                info.message()
         );
     }
 }
