@@ -70,10 +70,10 @@ public class OrderService {
 
     @Transactional
     public void processProductResult(ProductEventPayload payload) {
-        Order order = findOrder(payload.orderId());
+        Order order = getOrder(payload.orderId());
 
         if (payload.status() == ProductEventType.STOCK_DEDUCTED_SUCCESS) {
-            order.completeOrder();
+            order.complete();
             log.info("주문 재고 확인 완료 (주문 완료) - OrderID: {}", order.getOrderId());
 
         } else if (payload.status() == ProductEventType.STOCK_DEDUCTED_FAILED) {
@@ -82,16 +82,16 @@ public class OrderService {
         }
     }
 
-    public Page<OrderInfo> find(Pageable pageable) {
+    public Page<OrderInfo> findOrders(Pageable pageable) {
         return orderRepository.findAll(pageable)
                 .map(OrderInfo::from);
     }
 
-    public OrderDetailInfo find(UUID orderId) {
-        return OrderDetailInfo.from(findOrder(orderId));
+    public OrderDetailInfo findOrderDetail(UUID orderId) {
+        return OrderDetailInfo.from(getOrder(orderId));
     }
 
-    private Order findOrder(UUID orderId) {
+    private Order getOrder(UUID orderId) {
         return orderRepository.findById(orderId)
                 .orElseThrow(() -> new OrderEventException(OrderErrorCode.ORDER_NOT_FOUND));
     }

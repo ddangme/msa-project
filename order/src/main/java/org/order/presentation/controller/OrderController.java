@@ -30,15 +30,15 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<CommonResponse<Page<OrderResponse>>> findOrder(Pageable pageable) {
-        org.springframework.data.domain.Page<OrderInfo> infos = orderService.find(pageable);
+    public ResponseEntity<CommonResponse<Page<OrderResponse>>> findOrders(Pageable pageable) {
+        org.springframework.data.domain.Page<OrderInfo> infos = orderService.findOrders(pageable);
 
         return ResponseEntity.ok(CommonResponse.success(infos.map(OrderResponse::from)));
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<CommonResponse<OrderDetailResponse>> findOrder(@PathVariable UUID orderId) {
-        OrderDetailInfo info = orderService.find(orderId);
+    public ResponseEntity<CommonResponse<OrderDetailResponse>> findOrderDetail(@PathVariable UUID orderId) {
+        OrderDetailInfo info = orderService.findOrderDetail(orderId);
 
         return ResponseEntity.ok(CommonResponse.success(OrderDetailResponse.from(info)));
     }
