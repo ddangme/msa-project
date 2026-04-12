@@ -7,8 +7,11 @@ import org.order.domain.exception.OrderException;
 import org.order.domain.exception.OrderNotFoundException;
 import org.order.domain.repository.OrderRepository;
 import org.order.global.exception.OrderErrorCode;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -23,8 +26,12 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public Order findById(UUID orderId) {
-        return orderJpaRepository.findById(orderId)
-                .orElseThrow(() -> new OrderNotFoundException(OrderErrorCode.ORDER_NOT_FOUND));
+    public Optional<Order> findById(UUID orderId) {
+        return orderJpaRepository.findById(orderId);
+    }
+
+    @Override
+    public Page<Order> findAll(Pageable pageable) {
+        return orderJpaRepository.findAll(pageable);
     }
 }
