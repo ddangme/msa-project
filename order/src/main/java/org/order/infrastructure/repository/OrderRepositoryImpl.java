@@ -1,12 +1,8 @@
 package org.order.infrastructure.repository;
 
 import lombok.RequiredArgsConstructor;
-import org.common.exception.ErrorCode;
 import org.order.domain.entity.Order;
-import org.order.domain.exception.OrderException;
-import org.order.domain.exception.OrderNotFoundException;
 import org.order.domain.repository.OrderRepository;
-import org.order.global.exception.OrderErrorCode;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
