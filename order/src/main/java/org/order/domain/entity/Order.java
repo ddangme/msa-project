@@ -58,7 +58,7 @@ public class Order {
                 .build();
     }
 
-    public void completeOrder() {
+    public void complete() {
         this.orderStatus = OrderStatus.ORDER_COMPLETED;
     }
 
