@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.order.application.dto.CreateOrderCommand;
+import org.order.application.dto.OrderDetailInfo;
+import org.order.application.dto.OrderInfo;
 import org.order.domain.entity.Order;
 import org.order.domain.entity.OrderEventLog;
 import org.order.domain.event.OrderEventPayload;
@@ -17,6 +19,8 @@ import org.order.domain.repository.OrderRepository;
 import org.order.domain.repository.ProductClient;
 import org.order.global.exception.OrderErrorCode;
 import org.order.infrastructure.dto.ProductInfo;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -66,7 +70,7 @@ public class OrderService {
 
     @Transactional
     public void processProductResult(ProductEventPayload payload) {
-        Order order = orderRepository.findById(payload.orderId());
+        Order order = findOrder(payload.orderId());
 
         if (payload.status() == ProductEventType.STOCK_DEDUCTED_SUCCESS) {
             order.completeOrder();
@@ -76,5 +80,19 @@ public class OrderService {
             order.cancelOrder();
             log.warn("재고 부족으로 인한 주문 보상 트랜잭션 (주문 취소) 완료 - OrderID: {}", order.getOrderId());
         }
+    }
+
+    public Page<OrderInfo> find(Pageable pageable) {
+        return orderRepository.findAll(pageable)
+                .map(OrderInfo::from);
+    }
+
+    public OrderDetailInfo find(UUID orderId) {
+        return OrderDetailInfo.from(findOrder(orderId));
+    }
+
+    private Order findOrder(UUID orderId) {
+        return orderRepository.findById(orderId)
+                .orElseThrow(() -> new OrderEventException(OrderErrorCode.ORDER_NOT_FOUND));
     }
 }
