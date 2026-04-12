@@ -94,5 +94,6 @@ public class OrderService {
 
     private Order getOrder(UUID orderId) {
         return orderRepository.findById(orderId)
-                .orElseThrow(() -> new OrderNotFoundException(OrderErrorCode.ORDER_NOT_FOUND));    }
+                .orElseThrow(() -> new OrderNotFoundException(OrderErrorCode.ORDER_NOT_FOUND));
+    }
 }
