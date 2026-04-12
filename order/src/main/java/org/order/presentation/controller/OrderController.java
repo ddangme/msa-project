@@ -31,7 +31,7 @@ public class OrderController {
 
     @GetMapping
     public ResponseEntity<CommonResponse<Page<OrderResponse>>> findOrders(Pageable pageable) {
-        org.springframework.data.domain.Page<OrderInfo> infos = orderService.findOrders(pageable);
+        Page<OrderInfo> infos = orderService.findOrders(pageable);
 
         return ResponseEntity.ok(CommonResponse.success(infos.map(OrderResponse::from)));
     }
