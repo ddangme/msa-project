@@ -17,14 +17,14 @@ public class OrderEventListener {
     private final ObjectMapper objectMapper;
     private final OrderService orderService;
 
-    @KafkaListener(topics = "product-stock-result", groupId = "order-service-group")
+    @KafkaListener(topics = "${app.kafka.topics.product-stock-result}")
     public void consumeProductResult(String message) {
         try {
+            log.info("상품 재고 처리 결과 메시지 수신 성공: {}", message);
             ProductEventPayload payload = objectMapper.readValue(message, ProductEventPayload.class);
-            log.info("상품 서버 결과 수신 - OrderID: {}, Status: {}", payload.orderId(), payload.status());
             orderService.processProductResult(payload);
         } catch (JsonProcessingException e) {
-            log.error("상품 응답 메시지 파싱 실패: {}", e.getMessage(), e);
+            log.error("상품 재고 처리 결과 메시지 역직렬화 실패: {}", e.getMessage(), e);
         }
     }
 }

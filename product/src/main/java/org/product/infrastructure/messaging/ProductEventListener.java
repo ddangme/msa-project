@@ -17,15 +17,25 @@ public class ProductEventListener {
     private final ObjectMapper objectMapper;
     private final ProductService productService;
 
-    @KafkaListener(topics = "order-created", groupId = "product-service-group")
+    @KafkaListener(topics = "${app.kafka.topics.order-created}")
     public void consumeOrderCreated(String message) {
         try {
-            log.info("카프카 메시지 수신 성공: {}", message);
-
+            log.info("주문 생성 카프카 메시지 수신 성공: {}", message);
             OrderEventPayload payload = objectMapper.readValue(message, OrderEventPayload.class);
             productService.processOrderEvent(payload);
         } catch (JsonProcessingException e) {
-            log.error("Failed to deserialize order event message: {}", e.getMessage(), e);
+            log.error("주문 생성 이벤트 메시지 역직렬화 실패: {}", e.getMessage(), e);
+        }
+    }
+
+    @KafkaListener(topics = "${app.kafka.topics.order-cancelled}")
+    public void consumeOrderCancelled(String message) {
+        try {
+            log.info("주문 취소 카프카 메시지 수신 성공: {}", message);
+            OrderEventPayload payload = objectMapper.readValue(message, OrderEventPayload.class);
+            productService.processOrderCancelled(payload);
+        } catch (JsonProcessingException e) {
+            log.error("주문 취소 이벤트 메시지 역직렬화 실패: {}", e.getMessage(), e);
         }
     }
 }

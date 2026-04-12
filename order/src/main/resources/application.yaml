@@ -41,3 +41,10 @@ eureka:
     register-with-eureka: true
     service-url:
       defaultZone: http://eureka-server:8761/eureka/
+
+app:
+  kafka:
+    topics:
+      order-created: order-created
+      order-cancelled: order-cancelled
+      product-stock-result: product-stock-result

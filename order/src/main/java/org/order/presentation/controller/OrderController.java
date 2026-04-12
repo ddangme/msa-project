@@ -29,18 +29,21 @@ public class OrderController {
         return ResponseEntity.ok(CommonResponse.success(orderId));
     }
 
+    @PatchMapping("/{orderId}/cancel")
+    public ResponseEntity<CommonResponse<Void>> cancelOrder(@PathVariable UUID orderId) {
+        orderService.cancelOrder(orderId);
+        return ResponseEntity.ok(CommonResponse.success());
+    }
+
     @GetMapping
     public ResponseEntity<CommonResponse<Page<OrderResponse>>> findOrders(Pageable pageable) {
         Page<OrderInfo> infos = orderService.findOrders(pageable);
-
         return ResponseEntity.ok(CommonResponse.success(infos.map(OrderResponse::from)));
     }
 
     @GetMapping("/{orderId}")
     public ResponseEntity<CommonResponse<OrderDetailResponse>> findOrderDetail(@PathVariable UUID orderId) {
         OrderDetailInfo info = orderService.findOrderDetail(orderId);
-
         return ResponseEntity.ok(CommonResponse.success(OrderDetailResponse.from(info)));
     }
-
 }

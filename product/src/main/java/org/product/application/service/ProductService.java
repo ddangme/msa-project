@@ -55,11 +55,22 @@ public class ProductService {
             product.decreaseStock(payload.quantity());
             eventType = ProductEventType.STOCK_DEDUCTED_SUCCESS;
         } catch (Exception e) {
-            log.error("Stock deduction failed for order {}: {}", payload.orderId(), e.getMessage(), e);
+            log.error("주문 재고 차감 실패 - OrderID: {}: {}", payload.orderId(), e.getMessage(), e);
             eventType = ProductEventType.STOCK_DEDUCTED_FAILED;
         }
 
         saveProductEvent(payload.orderId(), payload.productId(), eventType);
+    }
+
+    @Transactional
+    public void processOrderCancelled(OrderEventPayload payload) {
+        try {
+            Product product = getProduct(payload.productId());
+            product.restoreStock(payload.quantity());
+            log.info("주문 취소로 인한 재고 복구 완료 - OrderID: {}, ProductID: {}", payload.orderId(), payload.productId());
+        } catch (Exception e) {
+            log.error("재고 복구 실패 - OrderID: {}: {}", payload.orderId(), e.getMessage(), e);
+        }
     }
 
     private void saveProductEvent(UUID orderId, UUID productId, ProductEventType eventType) {
@@ -68,7 +79,7 @@ public class ProductService {
             String serializedPayload = objectMapper.writeValueAsString(payload);
             productEventLogRepository.save(ProductEventLog.create(orderId, eventType, serializedPayload));
         } catch (JsonProcessingException e) {
-            log.error("Failed to serialize product event payload: {}", e.getMessage(), e);
+            log.error("상품 이벤트 메시지 직렬화 실패: {}", e.getMessage(), e);
         }
     }
 
