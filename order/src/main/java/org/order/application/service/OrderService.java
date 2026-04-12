@@ -14,6 +14,7 @@ import org.order.domain.event.OrderEventType;
 import org.order.domain.event.ProductEventPayload;
 import org.order.domain.event.ProductEventType;
 import org.order.domain.exception.OrderEventException;
+import org.order.domain.exception.OrderNotFoundException;
 import org.order.domain.repository.OrderEventLogRepository;
 import org.order.domain.repository.OrderRepository;
 import org.order.domain.repository.ProductClient;
@@ -93,6 +94,5 @@ public class OrderService {
 
     private Order getOrder(UUID orderId) {
         return orderRepository.findById(orderId)
-                .orElseThrow(() -> new OrderEventException(OrderErrorCode.ORDER_NOT_FOUND));
-    }
+                .orElseThrow(() -> new OrderNotFoundException(OrderErrorCode.ORDER_NOT_FOUND));    }
 }
