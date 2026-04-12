@@ -9,6 +9,7 @@ import org.order.application.dto.OrderDetailInfo;
 import org.order.application.dto.OrderInfo;
 import org.order.domain.entity.Order;
 import org.order.domain.entity.OrderEventLog;
+import org.order.domain.entity.OrderStatus;
 import org.order.domain.event.OrderEventPayload;
 import org.order.domain.event.OrderEventType;
 import org.order.domain.event.ProductEventPayload;
@@ -44,21 +45,32 @@ public class OrderService {
         product.validateOrderable(command.quantity());
 
         Order savedOrder = orderRepository.save(command.toEntity(product.price()));
-        saveOrderEvent(savedOrder.getOrderId(), command);
+        saveOrderEvent(savedOrder.getOrderId(), command.productId(), command.quantity(), OrderEventType.ORDER_CREATED);
 
+        log.info("주문 생성 완료 - OrderID: {}", savedOrder.getOrderId());
         return savedOrder.getOrderId();
     }
 
-    private void saveOrderEvent(UUID orderId, CreateOrderCommand command) {
-        OrderEventPayload payload = new OrderEventPayload(
-                orderId,
-                command.productId(),
-                command.quantity(),
-                OrderEventType.ORDER_CREATED
-        );
+    @Transactional
+    public void cancelOrder(UUID orderId) {
+        Order order = getOrder(orderId);
+
+        if (order.getOrderStatus() == OrderStatus.ORDER_CANCEL) {
+            log.warn("이미 취소된 주문에 대한 취소 요청 - OrderID: {}", orderId);
+            return;
+        }
+
+        order.cancelOrder();
+        saveOrderEvent(order.getOrderId(), order.getProduct().getProductId(), order.getProduct().getQuantity(), OrderEventType.ORDER_CANCELLED);
+
+        log.info("주문 취소 및 이벤트 저장 완료 - OrderID: {}", order.getOrderId());
+    }
+
+    private void saveOrderEvent(UUID orderId, UUID productId, int quantity, OrderEventType eventType) {
+        OrderEventPayload payload = new OrderEventPayload(orderId, productId, quantity, eventType);
         String serializedPayload = serializePayload(payload);
 
-        orderEventLogRepository.save(OrderEventLog.create(orderId, serializedPayload));
+        orderEventLogRepository.save(OrderEventLog.create(orderId, eventType, serializedPayload));
     }
 
     private String serializePayload(OrderEventPayload payload) {

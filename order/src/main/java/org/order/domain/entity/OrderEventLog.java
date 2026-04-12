@@ -52,10 +52,10 @@ public class OrderEventLog {
         this.retryCount = 0;
     }
 
-    public static OrderEventLog create(UUID orderId, String payloadJson) {
+    public static OrderEventLog create(UUID orderId, OrderEventType orderEventType, String payloadJson) {
         return OrderEventLog.builder()
                 .orderId(orderId)
-                .orderEventType(OrderEventType.ORDER_CREATED)
+                .orderEventType(orderEventType)
                 .payload(payloadJson)
                 .build();
     }

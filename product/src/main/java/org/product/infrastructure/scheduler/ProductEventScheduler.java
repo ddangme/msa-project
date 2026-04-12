@@ -3,6 +3,7 @@ package org.product.infrastructure.scheduler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.product.domain.entity.ProductEventLog;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -18,7 +19,9 @@ public class ProductEventScheduler {
     private final KafkaTemplate<String, String> kafkaTemplate;
 
     private static final int MAX_RETRY = 3;
-    private static final String PRODUCT_STOCK_TOPIC = "product-stock-result";
+
+    @Value("${app.kafka.topics.product-stock-result}")
+    private String productStockTopic;
 
     @Scheduled(fixedDelay = 5000)
     public void publishProductEvents() {
@@ -32,7 +35,7 @@ public class ProductEventScheduler {
     }
 
     private void sendToKafka(ProductEventLog event) {
-        kafkaTemplate.send(PRODUCT_STOCK_TOPIC, event.getPayload())
+        kafkaTemplate.send(productStockTopic, event.getPayload())
                 .whenComplete((result, ex) -> {
                     if (ex == null) {
                         productEventProcessor.processSuccess(event.getEventId());
