@@ -1,6 +1,5 @@
 package org.order.global.exception;
 
-import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.common.response.CommonResponse;
 import org.order.domain.exception.OrderEventException;
@@ -31,15 +30,6 @@ public class OrderExceptionHandler {
                 .body(CommonResponse.fail(e.getMessage()));
     }
 
-    @ExceptionHandler(FeignException.class)
-    public ResponseEntity<CommonResponse<Void>> handleFeignException(FeignException e) {
-        log.error("FeignException 발생: status={}, message={}", e.status(), e.getMessage());
-
-        return ResponseEntity
-                .status(resolveFeignHttpStatus(e.status()))
-                .body(CommonResponse.fail("외부 서비스 연동 중 오류가 발생했습니다."));
-    }
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<CommonResponse<Void>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         log.warn("Validation Exception: {}", e.getMessage());
@@ -54,14 +44,6 @@ public class OrderExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(CommonResponse.fail("서버 내부 오류가 발생했습니다."));
-    }
-
-    private HttpStatus resolveFeignHttpStatus(int status) {
-        if (status < 0) {
-            return HttpStatus.BAD_GATEWAY;
-        }
-        HttpStatus resolvedStatus = HttpStatus.resolve(status);
-        return resolvedStatus != null ? resolvedStatus : HttpStatus.BAD_GATEWAY;
     }
 
 }
