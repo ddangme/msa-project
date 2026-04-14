@@ -11,14 +11,15 @@ public record CreateOrderCommand(
         UUID shopperId,
         UUID productId,
         int quantity,
+        int totalPrice,
         String address,
         String detailAddress,
         String shopperName,
         String message
 ) {
 
-    public Order toEntity(int pricePerItem) {
-        return Order.create(sellerId, shopperId, toProduct(), toDelivery(), pricePerItem);
+    public Order toEntity() {
+        return Order.create(sellerId, shopperId, toProduct(), toDelivery(), totalPrice);
     }
 
     private Product toProduct() {
