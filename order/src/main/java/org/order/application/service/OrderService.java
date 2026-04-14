@@ -18,9 +18,7 @@ import org.order.domain.exception.OrderEventException;
 import org.order.domain.exception.OrderNotFoundException;
 import org.order.domain.repository.OrderEventLogRepository;
 import org.order.domain.repository.OrderRepository;
-import org.order.domain.repository.ProductClient;
 import org.order.global.exception.OrderErrorCode;
-import org.order.infrastructure.dto.ProductInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -36,15 +34,11 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final OrderEventLogRepository orderEventLogRepository;
-    private final ProductClient productClient;
     private final ObjectMapper objectMapper;
 
     @Transactional
     public UUID createOrder(CreateOrderCommand command) {
-        ProductInfo product = productClient.getProduct(command.productId());
-        product.validateOrderable(command.quantity());
-
-        Order savedOrder = orderRepository.save(command.toEntity(product.price()));
+        Order savedOrder = orderRepository.save(command.toEntity());
         saveOrderEvent(savedOrder.getOrderId(), command.productId(), command.quantity(), OrderEventType.ORDER_CREATED);
 
         log.info("주문 생성 완료 - OrderID: {}", savedOrder.getOrderId());
