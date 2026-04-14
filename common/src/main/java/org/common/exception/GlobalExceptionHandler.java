@@ -1,7 +1,5 @@
 package org.common.exception;
 
-import lombok.Builder;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,19 +37,5 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ErrorResponse.of(ErrorCode.INTERNAL_SERVER_ERROR));
-    }
-
-    @Getter
-    @Builder
-    public static class ErrorResponse {
-        private final String code;
-        private final String message;
-
-        public static ErrorResponse of(BaseErrorCode baseErrorCode) {
-            return ErrorResponse.builder()
-                    .code(baseErrorCode.getCode())
-                    .message(baseErrorCode.getMessage())
-                    .build();
-        }
     }
 }
