@@ -5,6 +5,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.order.domain.policy.CustomerOrderStatusPolicy;
+import org.order.domain.policy.OrderStatusPolicy;
 import org.order.domain.vo.Delivery;
 import org.order.domain.vo.Product;
 
@@ -42,7 +44,7 @@ public class Order {
     private Order(UUID sellerId, UUID shopperId, Product product, Delivery delivery, Long totalPrice) {
         this.sellerId = sellerId;
         this.shopperId = shopperId;
-        this.orderStatus = OrderStatus.PENDING;
+        this.orderStatus = OrderStatus.ORDER_CREATED;
         this.totalPrice = totalPrice;
         this.product = product;
         this.delivery = delivery;
@@ -58,12 +60,19 @@ public class Order {
                 .build();
     }
 
-    public void complete() {
-        this.orderStatus = OrderStatus.ORDER_COMPLETED;
+    public void cancel(OrderStatusPolicy policy) {
+        policy.validateCancel(this.orderStatus);
+        this.orderStatus = OrderStatus.ORDER_CANCEL;
     }
 
-    public void cancelOrder() {
-        this.orderStatus = OrderStatus.ORDER_CANCEL;
+    public void confirm(OrderStatusPolicy policy) {
+        policy.validateConfirm(this.orderStatus);
+        this.orderStatus = OrderStatus.ORDER_CONFIRMED;
+    }
+
+    public void completed(OrderStatusPolicy policy) {
+        policy.validateComplete(this.orderStatus);
+        this.orderStatus = OrderStatus.ORDER_COMPLETED;
     }
 
 }

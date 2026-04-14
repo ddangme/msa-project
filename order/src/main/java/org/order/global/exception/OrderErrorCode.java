@@ -14,6 +14,8 @@ public enum OrderErrorCode implements BaseErrorCode {
     ORDER_EVENT_NOT_FOUND("ORDER-004", "존재하지 않는 이벤트입니다."),
     ORDER_NOT_FOUND("ORDER-005", "존재하지 않는 주문입니다."),
 
+    INVALID_STATUS_TRANSITION("ORDER-006", "불가능한 주문 상태 전환입니다."),
+
     ;
 
     private final String code;

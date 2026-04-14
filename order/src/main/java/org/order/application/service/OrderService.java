@@ -10,12 +10,14 @@ import org.order.application.dto.OrderInfo;
 import org.order.domain.entity.Order;
 import org.order.domain.entity.OrderEventLog;
 import org.order.domain.entity.OrderStatus;
+import org.order.domain.policy.CustomerOrderStatusPolicy;
 import org.order.domain.event.OrderEventPayload;
 import org.order.domain.event.OrderEventType;
 import org.order.domain.event.ProductEventPayload;
 import org.order.domain.event.ProductEventType;
 import org.order.domain.exception.OrderEventException;
 import org.order.domain.exception.OrderNotFoundException;
+import org.order.domain.policy.OrderStatusPolicy;
 import org.order.domain.repository.OrderEventLogRepository;
 import org.order.domain.repository.OrderRepository;
 import org.order.global.exception.OrderErrorCode;
@@ -54,7 +56,7 @@ public class OrderService {
             return;
         }
 
-        order.cancelOrder();
+        order.cancel(createPolicy());
         saveOrderEvent(order.getOrderId(), order.getProduct().getProductId(), order.getProduct().getQuantity(), OrderEventType.ORDER_CANCELLED);
 
         log.info("주문 취소 및 이벤트 저장 완료 - OrderID: {}", order.getOrderId());
@@ -80,11 +82,11 @@ public class OrderService {
         Order order = getOrder(payload.orderId());
 
         if (payload.status() == ProductEventType.STOCK_DEDUCTED_SUCCESS) {
-            order.complete();
+            order.confirm(createPolicy());
             log.info("주문 재고 확인 완료 (주문 완료) - OrderID: {}", order.getOrderId());
 
         } else if (payload.status() == ProductEventType.STOCK_DEDUCTED_FAILED) {
-            order.cancelOrder();
+            order.cancel(createPolicy());
             log.warn("재고 부족으로 인한 주문 보상 트랜잭션 (주문 취소) 완료 - OrderID: {}", order.getOrderId());
         }
     }
@@ -101,5 +103,11 @@ public class OrderService {
     private Order getOrder(UUID orderId) {
         return orderRepository.findById(orderId)
                 .orElseThrow(() -> new OrderNotFoundException(OrderErrorCode.ORDER_NOT_FOUND));
+    }
+
+    // 관리자 정책과 고객 정책이 달라질 수 있기 때문에, 주문 상태 변경 정책을 생성하는 메서드를 분리하여 관리한다.
+    // 추후 회원가입 로직이 구현된다면, Factory 패턴 방식으로 확장할 수 있다.
+    private OrderStatusPolicy createPolicy() {
+        return new CustomerOrderStatusPolicy();
     }
 }
