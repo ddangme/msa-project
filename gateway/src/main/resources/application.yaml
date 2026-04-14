@@ -10,12 +10,12 @@ spring:
         webmvc:
           routes:
             - id: order-server
-              uri: http://order-server:19010
+              uri: lb://order-server
               predicates:
                 - Path=/api/v1/orders/**
 
             - id: product-server
-              uri: http://product-server:19050
+              uri: lb://product-server
               predicates:
                 - Path=/api/v1/products/**
 
