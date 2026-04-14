@@ -5,7 +5,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.order.domain.policy.CustomerOrderStatusPolicy;
 import org.order.domain.policy.OrderStatusPolicy;
 import org.order.domain.vo.Delivery;
 import org.order.domain.vo.Product;
