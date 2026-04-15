@@ -1,5 +1,6 @@
 dependencies {
 	api 'org.springframework.boot:spring-boot-starter-actuator'
+	api 'io.micrometer:micrometer-registry-prometheus'
 	api 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 
 	compileOnly 'org.springframework.boot:spring-boot-starter-web'

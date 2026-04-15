@@ -4,6 +4,10 @@ server:
 spring:
   application:
     name: gateway-server
+
+  config:
+    import: "optional:classpath:application-common.yaml"
+
   cloud:
     gateway:
       server:
