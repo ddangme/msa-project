@@ -6,7 +6,7 @@ spring:
     name: product-server
 
   config:
-    import: "optional:classpath:application-common.yml"
+    import: "optional:classpath:application-common.yaml"
 
   datasource:
     url: jdbc:postgresql://postgres-db:5432/msa-project
